@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Up and Running with Shadow CLJS</title>
+<meta name="author" content="(Dan Sutton)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/css/theme/moon.css" id="theme"/>
+
+<link rel="stylesheet" href="./local.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'https://cdn.jsdelivr.net/npm/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<meta name="description" content="Up and Running with Shadow CLJS.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Up and Running with Shadow CLJS</h1><h2 class="author">Dan Sutton</h2><p class="date">Created: 2020-01-07 Tue 23:46</p>
+</section>
+
+<section>
+<section id="slide-orge7c434b">
+<h2 id="orge7c434b"><span class="section-number-2">1</span> Shadow CLJS and ClojureScript</h2>
+
+<div class="figure">
+<p><img src="https://raw.githubusercontent.com/thheller/shadow-cljs/master/src/main/shadow/cljs/devtools/server/web/resources/img/shadow-cljs.png" alt="shadow-cljs.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://clojurescript.org/images/cljs-logo-120b.png" alt="cljs-logo-120b.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0987211">
+<h2 id="org0987211"><span class="section-number-2">2</span> What this will demonstrate</h2>
+<ul>
+<li>how to get clojurescript installed</li>
+<li>how to configure</li>
+<li>how to run/build</li>
+<li>how to deploy on Netlify</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaef5139">
+<h2 id="orgaef5139"><span class="section-number-2">3</span> Why ClojureScript</h2>
+<ul>
+<li>functional</li>
+<li>interactive/REPL</li>
+<li>immutable</li>
+<li>Google Closure</li>
+<li>OOO</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org4c3137e">
+<h2 id="org4c3137e"><span class="section-number-2">4</span> What is Shadow CLJS</h2>
+<ul>
+<li>Clojurescript is a compiler, its just a jar file for a jvm.</li>
+<li>need configuration for CLJS compiler</li>
+<li>websockets to and from the js engine for interpreting</li>
+<li>dependency management</li>
+<li>hot code reload</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgef15448">
+<h2 id="orgef15448"><span class="section-number-2">5</span> Getting Set Up</h2>
+<p>
+The web is built on this language so we need two programs in this language:
+</p>
+
+<p class="fragment roll-in">
+C++
+</p>
+
+<p class="fragment roll-in">
+Two c++ programs:
+</p>
+
+<ul class="fragment roll-in">
+<li>jdk</li>
+<li>node/v8</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org2b65e15">
+<h2 id="org2b65e15"><span class="section-number-2">6</span> Creating an app</h2>
+<p>
+To target a browser:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"><code trim>mkdir app
+npm init -y
+npm i react create-react-class react-dom shadow-cljs
+</code></pre>
+</div>
+
+<p class="fragment roll-in">
+Alternatively, can use a starter:
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"><code trim>npx create-cljs-app my-app
+<span style="color: #d08770;">cd</span> my-app
+npm start
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org72936c5">
+<h2 id="org72936c5"><span class="section-number-2">7</span> Create shadow-cljs.edn</h2>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">{</span><span style="color: #d08770;">:builds</span>       <span style="color: #93a8c6;">{</span><span style="color: #d08770;">:app</span> <span style="color: #b0b1a3;">{</span><span style="color: #d08770;">:asset-path</span> <span style="color: #a3be8c;">"/js"</span>
+                      <span style="color: #d08770;">:modules</span>    <span style="color: #97b098;">{</span><span style="color: #d08770;">:main</span> <span style="color: #aebed8;">{</span><span style="color: #d08770;">:init-fn</span> <span style="color: #c0c5ce;">app.main</span>/main<span style="color: #aebed8;">}</span><span style="color: #97b098;">}</span>
+                      <span style="color: #d08770;">:output-dir</span> <span style="color: #a3be8c;">"public/js"</span>
+                      <span style="color: #d08770;">:target</span>     <span style="color: #d08770;">:browser</span><span style="color: #b0b1a3;">}</span><span style="color: #93a8c6;">}</span>
+ <span style="color: #d08770;">:dependencies</span> <span style="color: #93a8c6;">[</span><span style="color: #b0b1a3;">[</span>reagent <span style="color: #a3be8c;">"0.8.1"</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>
+ <span style="color: #d08770;">:dev-http</span>     <span style="color: #93a8c6;">{</span>3000 <span style="color: #a3be8c;">"public"</span><span style="color: #93a8c6;">}</span>
+ <span style="color: #d08770;">:source-paths</span> <span style="color: #93a8c6;">[</span><span style="color: #a3be8c;">"src"</span><span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">}</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org16a25f1">
+<h2 id="org16a25f1"><span class="section-number-2">8</span> Index.html</h2>
+<div class="org-src-container">
+
+<pre  class="src src-html"><code trim>&lt;<span style="color: #b48ead;">!DOCTYPE</span> html&gt;
+&lt;<span style="color: #8fa1b3;">html</span> <span style="color: #bf616a;">lang</span>=<span style="color: #a3be8c;">"en"</span>&gt;
+  &lt;<span style="color: #8fa1b3;">head</span>&gt;
+    &lt;<span style="color: #8fa1b3;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">app</span>&lt;/<span style="color: #8fa1b3;">title</span>&gt;
+  &lt;/<span style="color: #8fa1b3;">head</span>&gt;
+  &lt;<span style="color: #8fa1b3;">body</span>&gt;
+    &lt;<span style="color: #8fa1b3;">div</span> <span style="color: #bf616a;">id</span>=<span style="color: #a3be8c;">"app"</span>&gt;&lt;/<span style="color: #8fa1b3;">div</span>&gt;
+    &lt;<span style="color: #8fa1b3;">script</span> <span style="color: #bf616a;">src</span>=<span style="color: #a3be8c;">"/js/main.js"</span> <span style="color: #bf616a;">type</span>=<span style="color: #a3be8c;">"text/javascript"</span>&gt;&lt;/<span style="color: #8fa1b3;">script</span>&gt;
+  &lt;/<span style="color: #8fa1b3;">body</span>&gt;
+&lt;/<span style="color: #8fa1b3;">html</span>&gt;
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org8a85732">
+<h2 id="org8a85732"><span class="section-number-2">9</span> Hiccup</h2>
+<p>
+Datastructures describing html
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-html"><code trim>&lt;<span style="color: #8fa1b3;">div</span>&gt;
+  &lt;<span style="color: #8fa1b3;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Title</span>&lt;/<span style="color: #8fa1b3;">h1</span>&gt;
+  &lt;<span style="color: #8fa1b3;">a</span> <span style="color: #bf616a;">href</span>=<span style="color: #a3be8c;">"www.google.com"</span>&gt;Link text&lt;/<span style="color: #8fa1b3;">a</span>&gt;
+  &lt;<span style="color: #8fa1b3;">ul</span>&gt;
+    &lt;<span style="color: #8fa1b3;">li</span>&gt;Thing 1&lt;/<span style="color: #8fa1b3;">li</span>&gt;
+    &lt;<span style="color: #8fa1b3;">li</span>&gt;Thing 2&lt;/<span style="color: #8fa1b3;">li</span>&gt;
+  &lt;/<span style="color: #8fa1b3;">ul</span>&gt;
+&lt;/<span style="color: #8fa1b3;">div</span>&gt;
+
+</code></pre>
+</div>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">[</span><span style="color: #d08770;">:div</span>
+ <span style="color: #93a8c6;">[</span><span style="color: #d08770;">:h1</span> <span style="color: #a3be8c;">"Title"</span><span style="color: #93a8c6;">]</span>
+ <span style="color: #93a8c6;">[</span><span style="color: #d08770;">:a</span> <span style="color: #b0b1a3;">{</span><span style="color: #d08770;">:href</span> <span style="color: #a3be8c;">"www.google.com"</span>
+      <span style="color: #d08770;">:style</span> <span style="color: #97b098;">{</span><span style="color: #d08770;">:color</span> <span style="color: #a3be8c;">"blue"</span>
+              <span style="color: #d08770;">:font-size</span> <span style="color: #a3be8c;">"24px"</span><span style="color: #97b098;">}</span><span style="color: #b0b1a3;">}</span>
+  <span style="color: #a3be8c;">"Link Text"</span><span style="color: #93a8c6;">]</span>
+ <span style="color: #93a8c6;">[</span><span style="color: #d08770;">:ul</span>
+  <span style="color: #b0b1a3;">[</span><span style="color: #d08770;">:li</span> <span style="color: #a3be8c;">"Thing 1"</span><span style="color: #b0b1a3;">]</span>
+  <span style="color: #b0b1a3;">[</span><span style="color: #d08770;">:li</span> <span style="color: #a3be8c;">"Thing 2"</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">]</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb1ac633">
+<h2 id="orgb1ac633"><span class="section-number-2">10</span> Closer look</h2>
+<div class="org-src-container">
+
+<pre  class="src src-sh"><code trim>src
+&#9492;&#9472;&#9472; app
+    &#9492;&#9472;&#9472; main.cljs
+</code></pre>
+</div>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">ns</span> <span style="color: #c0c5ce;">app.main</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #d08770;">:require</span> <span style="color: #b0b1a3;">[</span>reagent.core <span style="color: #d08770;">:as</span> r<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> <span style="color: #8fa1b3;">app</span>
+  <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">[</span><span style="color: #d08770;">:div</span> <span style="color: #b0b1a3;">{</span><span style="color: #d08770;">:style</span> <span style="color: #97b098;">{</span><span style="color: #d08770;">:margin</span> <span style="color: #a3be8c;">"auto"</span>
+                 <span style="color: #d08770;">:margin-top</span> <span style="color: #a3be8c;">"100px"</span>
+                 <span style="color: #d08770;">:width</span> <span style="color: #a3be8c;">"600px"</span><span style="color: #97b098;">}</span><span style="color: #b0b1a3;">}</span>
+   <span style="color: #b0b1a3;">[</span><span style="color: #d08770;">:h1</span> <span style="color: #a3be8c;">"hi"</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6a6889f">
+<h2 id="org6a6889f"><span class="section-number-2">11</span> Boiler Plate</h2>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:</span><span style="color: #c0c5ce;">dev</span><span style="color: #c0c5ce; background-color: #2b303b;">/</span><span style="color: #d08770;">after-load</span> <span style="color: #8fa1b3;">start</span> <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #c0c5ce;">r</span>/render <span style="color: #b0b1a3;">[</span>app<span style="color: #b0b1a3;">]</span>
+            <span style="color: #b0b1a3;">(</span>.getElementById <span style="color: #c0c5ce;">js</span>/document <span style="color: #a3be8c;">"app"</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">main</span>
+  <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">(</span>start<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org94aa4bb">
+<h2 id="org94aa4bb"><span class="section-number-2">12</span> Source files</h2>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><code trim><span style="color: #c0c5ce;">;; </span><span style="color: #65737e;">src/app/main.cljs</span>
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">ns</span> <span style="color: #c0c5ce;">app.main</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #d08770;">:require</span> <span style="color: #b0b1a3;">[</span>reagent.core <span style="color: #d08770;">:as</span> r<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> <span style="color: #8fa1b3;">app</span>
+  <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">[</span><span style="color: #d08770;">:div</span> <span style="color: #b0b1a3;">{</span><span style="color: #d08770;">:style</span> <span style="color: #97b098;">{</span><span style="color: #d08770;">:margin</span> <span style="color: #a3be8c;">"auto"</span>
+                 <span style="color: #d08770;">:margin-top</span> <span style="color: #a3be8c;">"100px"</span>
+                 <span style="color: #d08770;">:width</span> <span style="color: #a3be8c;">"600px"</span><span style="color: #97b098;">}</span><span style="color: #b0b1a3;">}</span>
+   <span style="color: #b0b1a3;">[</span><span style="color: #d08770;">:h1</span> <span style="color: #a3be8c;">"hi"</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:</span><span style="color: #c0c5ce;">dev</span><span style="color: #c0c5ce; background-color: #2b303b;">/</span><span style="color: #d08770;">after-load</span> <span style="color: #8fa1b3;">start</span> <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #c0c5ce;">r</span>/render <span style="color: #b0b1a3;">[</span>app<span style="color: #b0b1a3;">]</span>
+            <span style="color: #b0b1a3;">(</span>.getElementById <span style="color: #c0c5ce;">js</span>/document <span style="color: #a3be8c;">"app"</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">main</span>
+  <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">(</span>start<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org27097fd">
+<h2 id="org27097fd"><span class="section-number-2">13</span> Run the app</h2>
+<div class="org-src-container">
+
+<pre  class="src src-sh"><code trim>dan@pop-os:~/projects/clojure/cljs-play/app$ npx shadow-cljs watch app
+shadow-cljs - config: /home/dan/projects/clojure/cljs-play/app/shadow-cljs.edn  cli version: 2.8.83  node: v12.13.1
+shadow-cljs - updating dependencies
+shadow-cljs - dependencies updated
+shadow-cljs - HTTP server available at http://localhost:3000
+shadow-cljs - server version: 2.8.83 running at http://localhost:9630
+shadow-cljs - nREPL server started on port 44793
+shadow-cljs - watching build :app
+[:app] Configuring build.
+[:app] Compiling ...
+[:app] Build completed. (162 files, 161 compiled, 0 warnings, 32.62s)
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org094cfe2">
+<h2 id="org094cfe2"><span class="section-number-2">14</span> REPL</h2>
+<p>
+How to connect to a repl
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh"><code trim>dan@pop-os:~/projects/clojure/cljs-play/app$ npx shadow-cljs cljs-repl app
+shadow-cljs - config: /home/dan/projects/clojure/cljs-play/app/shadow-cljs.edn  cli version: 2.8.83  node: v12.13.1
+shadow-cljs - connected to server
+cljs.user=&gt; (require <span style="color: #a3be8c;">'app.main)</span>
+<span style="color: #a3be8c;">No application has connected to the REPL server. Make sure your JS environment has loaded your compiled ClojureScript code.</span>
+<span style="color: #a3be8c;">&gt; (require '</span>app.main)
+nil
+cljs.user=&gt; (in-ns <span style="color: #a3be8c;">'app.main)</span>
+<span style="color: #a3be8c;">nil</span>
+<span style="color: #a3be8c;">app.main=&gt; (app)</span>
+<span style="color: #a3be8c;">[:div {:style {:margin "auto", :margin-top "100px", :width "600px"}} [:h1 "hi"]]</span>
+<span style="color: #a3be8c;">app.main=&gt;</span>
+</code></pre>
+</div>
+
+<p>
+Above is a common mistake: "no application has connected&#x2026;". You need to visit localhost:3000 so that Shadow CLJS is connected to the js runtime to evaluate your code.
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgdbeac6f">
+<h2 id="orgdbeac6f"><span class="section-number-2">15</span> REPL in CLJS</h2>
+<ul>
+<li>in a browser setting, generally not as useful</li>
+<li>rely on browser, hot code reloading, and tooling</li>
+<li>tooling: inline evaluation results, autocomplete, etc.</li>
+<li>in a node setting, absolutely useful</li>
+<li>of course on the jvm its a requirement</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org6abf637">
+<h2 id="org6abf637"><span class="section-number-2">16</span> Npm packages</h2>
+<p>
+While server is running you can just install
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh"><code trim>npm i react-modal
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">ns</span> <span style="color: #c0c5ce;">app.main</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #d08770;">:require</span> <span style="color: #b0b1a3;">[</span>reagent.core <span style="color: #d08770;">:as</span> r<span style="color: #b0b1a3;">]</span>
+            <span style="color: #b0b1a3;">[</span><span style="color: #a3be8c;">"react-modal"</span> <span style="color: #d08770;">:as</span> Modal<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span>.setAppElement Modal <span style="color: #a3be8c;">"#app"</span><span style="color: #8c8c8c;">)</span>
+
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> <span style="color: #8fa1b3;">app</span>
+  <span style="color: #93a8c6;">[]</span>
+  <span style="color: #93a8c6;">(</span><span style="color: #b48ead;">let</span> <span style="color: #b0b1a3;">[</span>modal-state <span style="color: #97b098;">(</span><span style="color: #c0c5ce;">r</span>/atom <span style="color: #d08770;">false</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">]</span>
+    <span style="color: #b0b1a3;">(</span><span style="color: #b48ead;">fn</span> <span style="color: #97b098;">[]</span>
+      <span style="color: #97b098;">[</span><span style="color: #d08770;">:div</span> <span style="color: #aebed8;">{</span><span style="color: #d08770;">:style</span> <span style="color: #b0b0b3;">{</span><span style="color: #d08770;">:margin</span> <span style="color: #a3be8c;">"auto"</span>
+                     <span style="color: #d08770;">:margin-top</span> <span style="color: #a3be8c;">"100px"</span>
+                     <span style="color: #d08770;">:width</span> <span style="color: #a3be8c;">"600px"</span><span style="color: #b0b0b3;">}</span><span style="color: #aebed8;">}</span>
+       <span style="color: #aebed8;">[</span><span style="color: #d08770;">:h1</span> <span style="color: #a3be8c;">"hi"</span><span style="color: #aebed8;">]</span>
+       <span style="color: #aebed8;">[</span><span style="color: #d08770;">:button</span> <span style="color: #b0b0b3;">{</span><span style="color: #d08770;">:on-click</span> #<span style="color: #90a890;">(</span>swap! modal-state not<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">}</span>
+        <span style="color: #a3be8c;">"Button"</span><span style="color: #aebed8;">]</span>
+       <span style="color: #aebed8;">[</span><span style="color: #d08770;">:&gt;</span> Modal <span style="color: #b0b0b3;">{</span><span style="color: #d08770;">:isOpen</span> @modal-state
+                  <span style="color: #d08770;">:onRequestClose</span> #<span style="color: #90a890;">(</span>reset! modal-state <span style="color: #d08770;">false</span><span style="color: #90a890;">)</span>
+                  <span style="color: #d08770;">:contentLabel</span> <span style="color: #a3be8c;">"Example Modal"</span>
+                  <span style="color: #d08770;">:shouldCloseOnOverlayClick</span> <span style="color: #d08770;">true</span>
+                  <span style="color: #d08770;">:style</span> <span style="color: #90a890;">{</span><span style="color: #d08770;">:content</span> <span style="color: #a2b6da;">{</span><span style="color: #d08770;">:top</span>         <span style="color: #a3be8c;">"50%"</span>
+                                    <span style="color: #d08770;">:left</span>        <span style="color: #a3be8c;">"50%"</span>
+                                    <span style="color: #d08770;">:right</span>       <span style="color: #a3be8c;">"auto"</span>
+                                    <span style="color: #d08770;">:bottom</span>      <span style="color: #a3be8c;">"auto"</span>
+                                    <span style="color: #d08770;">:marginRight</span> <span style="color: #a3be8c;">"-50%"</span>
+                                    <span style="color: #d08770;">:transform</span>   <span style="color: #a3be8c;">"translate(-50%, -50%)"</span><span style="color: #a2b6da;">}</span><span style="color: #90a890;">}</span><span style="color: #b0b0b3;">}</span>
+        <span style="color: #b0b0b3;">[</span><span style="color: #d08770;">:div</span>
+         <span style="color: #a3be8c;">"This is a modal"</span>
+         <span style="color: #90a890;">[</span><span style="color: #d08770;">:ul</span>
+          <span style="color: #a2b6da;">[</span><span style="color: #d08770;">:li</span> <span style="color: #a3be8c;">"With content"</span><span style="color: #a2b6da;">]</span>
+          <span style="color: #a2b6da;">[</span><span style="color: #d08770;">:li</span> <span style="color: #a3be8c;">"And lists"</span><span style="color: #a2b6da;">]</span><span style="color: #90a890;">]</span><span style="color: #b0b0b3;">]</span><span style="color: #aebed8;">]</span><span style="color: #97b098;">]</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd4e35da">
+<h2 id="orgd4e35da"><span class="section-number-2">17</span> Netlify</h2>
+<p>
+Netlify can build!
+</p>
+<ul>
+<li>Build Command: `npx shadow-cljs release app`</li>
+
+<li>Publish directory: "public"</li>
+
+</ul>
+
+<p class="fragment roll-in">
+<a href="https://hungry-ride-9a629b.netlify.com/" class="fragment roll-in">https://hungry-ride-9a629b.netlify.com/</a>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org91c70a5">
+<h2 id="org91c70a5"><span class="section-number-2">18</span> The bad</h2>
+<ul>
+<li>can use most libs but not all</li>
+<li>tooling not as polished</li>
+<li>there's not 100,000k people making cool libraries</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org94100e2">
+<h2 id="org94100e2"><span class="section-number-2">19</span> Links and Info</h2>
+<ul>
+<li>Shadow CLJS Users Guide: <a href="https://shadow-cljs.github.io/docs/UsersGuide.html">https://shadow-cljs.github.io/docs/UsersGuide.html</a></li>
+<li>Clojurescript homepage: <a href="https://clojurescript.org/">https://clojurescript.org/</a></li>
+<li>Clojure for the Brave and True: <a href="https://www.braveclojure.com/">https://www.braveclojure.com/</a></li>
+<li>Slack: <a href="http://clojurians.net/">http://clojurians.net/</a></li>
+<li>Learn Re-frame <a href="https://www.learnreframe.com/">https://www.learnreframe.com/</a></li>
+<li>subreddit /r/Clojure</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+width:1200, height:900, margin: 0.1, minScale:0.2, maxScale:2.5, transition:'cube',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

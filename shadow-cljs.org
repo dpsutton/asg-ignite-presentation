@@ -1,0 +1,295 @@
+#+Title: Up and Running with Shadow CLJS
+#+Author: Dan Sutton
+#+Email: dan@dpsutton.com
+
+#+REVEAL_INIT_OPTIONS: width:1200, height:900, margin: 0.1, minScale:0.2, maxScale:2.5, transition:'cube'
+#+OPTIONS: toc:nil
+#+REVEAL_THEME: moon
+#+REVEAL_HLEVEL: 2
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Up and Running with Shadow CLJS.">
+#+REVEAL_PLUGINS: (markdown notes)
+#+REVEAL_EXTRA_CSS: ./local.css
+
+* Shadow CLJS and ClojureScript
+
+https://raw.githubusercontent.com/thheller/shadow-cljs/master/src/main/shadow/cljs/devtools/server/web/resources/img/shadow-cljs.png
+
+https://clojurescript.org/images/cljs-logo-120b.png
+
+* What this will demonstrate
+
+- how to get clojurescript installed
+- how to configure
+- how to run/build
+- how to deploy on Netlify
+
+* Why ClojureScript
+
+- functional
+- interactive/REPL
+- immutable
+- Google Closure
+- OOO
+
+* What is Shadow CLJS
+
+- Clojurescript is a compiler, its just a jar file for a jvm.
+- need configuration for CLJS compiler
+- websockets to and from the js engine for interpreting
+- dependency management
+- hot code reload
+
+* Getting Set Up
+
+The web is built on this language so we need two programs in this language:
+
+#+ATTR_REVEAL: :frag roll-in
+C++
+
+#+ATTR_REVEAL: :frag roll-in
+Two c++ programs:
+
+#+ATTR_REVEAL: :frag roll-in
+- jdk
+- node/v8
+
+* Creating an app
+
+To target a browser:
+
+#+ATTR_REVEAL: :frag roll-in
+#+BEGIN_SRC sh
+mkdir app
+npm init -y
+npm i react create-react-class react-dom shadow-cljs
+#+END_SRC
+
+#+ATTR_REVEAL: :frag roll-in
+Alternatively, can use a starter:
+#+ATTR_REVEAL: :frag roll-in
+#+BEGIN_SRC sh
+npx create-cljs-app my-app
+cd my-app
+npm start
+#+END_SRC
+
+* Create shadow-cljs.edn
+
+#+BEGIN_SRC clojure #+NAME: shadow-cljs.edn
+  {:builds       {:app {:asset-path "/js"
+                        :modules    {:main {:init-fn app.main/main}}
+                        :output-dir "public/js"
+                        :target     :browser}}
+   :dependencies [[reagent "0.8.1"]]
+   :dev-http     {3000 "public"}
+   :source-paths ["src"]}
+#+END_SRC
+
+* Index.html
+
+#+BEGIN_SRC html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>app</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="/js/main.js" type="text/javascript"></script>
+  </body>
+</html>
+#+END_SRC
+
+* Hiccup
+
+Datastructures describing html
+#+BEGIN_SRC html
+  <div>
+    <h1>Title</h1>
+    <a href="www.google.com">Link text</a>
+    <ul>
+      <li>Thing 1</li>
+      <li>Thing 2</li>
+    </ul>
+  </div>
+
+#+END_SRC
+#+BEGIN_SRC clojure
+  [:div
+   [:h1 "Title"]
+   [:a {:href "www.google.com"
+        :style {:color "blue"
+                :font-size "24px"}}
+    "Link Text"]
+   [:ul
+    [:li "Thing 1"]
+    [:li "Thing 2"]]]
+#+END_SRC
+
+* Closer look
+
+#+BEGIN_SRC sh
+src
+└── app
+    └── main.cljs
+#+END_SRC
+#+BEGIN_SRC clojure
+(ns app.main
+  (:require [reagent.core :as r]))
+#+END_SRC
+
+#+ATTR_REVEAL: :frag roll-in
+#+BEGIN_SRC clojure
+(defn app
+  []
+  [:div {:style {:margin "auto"
+                 :margin-top "100px"
+                 :width "600px"}}
+   [:h1 "hi"]])
+#+END_SRC
+
+* Boiler Plate
+
+#+BEGIN_SRC clojure
+(defn ^:dev/after-load start []
+  (r/render [app]
+            (.getElementById js/document "app")))
+#+END_SRC
+
+#+ATTR_REVEAL: :frag roll-in
+#+BEGIN_SRC clojure
+(defn ^:export main
+  []
+  (start))
+#+END_SRC
+* Source files
+
+#+BEGIN_SRC clojure
+;; src/app/main.cljs
+(ns app.main
+  (:require [reagent.core :as r]))
+
+(defn app
+  []
+  [:div {:style {:margin "auto"
+                 :margin-top "100px"
+                 :width "600px"}}
+   [:h1 "hi"]])
+
+(defn ^:dev/after-load start []
+  (r/render [app]
+            (.getElementById js/document "app")))
+
+(defn ^:export main
+  []
+  (start))
+#+END_SRC
+
+* Run the app
+
+#+BEGIN_SRC sh
+dan@pop-os:~/projects/clojure/cljs-play/app$ npx shadow-cljs watch app
+shadow-cljs - config: /home/dan/projects/clojure/cljs-play/app/shadow-cljs.edn  cli version: 2.8.83  node: v12.13.1
+shadow-cljs - updating dependencies
+shadow-cljs - dependencies updated
+shadow-cljs - HTTP server available at http://localhost:3000
+shadow-cljs - server version: 2.8.83 running at http://localhost:9630
+shadow-cljs - nREPL server started on port 44793
+shadow-cljs - watching build :app
+[:app] Configuring build.
+[:app] Compiling ...
+[:app] Build completed. (162 files, 161 compiled, 0 warnings, 32.62s)
+#+END_SRC
+* REPL
+How to connect to a repl
+
+#+BEGIN_SRC sh
+dan@pop-os:~/projects/clojure/cljs-play/app$ npx shadow-cljs cljs-repl app
+shadow-cljs - config: /home/dan/projects/clojure/cljs-play/app/shadow-cljs.edn  cli version: 2.8.83  node: v12.13.1
+shadow-cljs - connected to server
+cljs.user=> (require 'app.main)
+No application has connected to the REPL server. Make sure your JS environment has loaded your compiled ClojureScript code.
+> (require 'app.main)
+nil
+cljs.user=> (in-ns 'app.main)
+nil
+app.main=> (app)
+[:div {:style {:margin "auto", :margin-top "100px", :width "600px"}} [:h1 "hi"]]
+app.main=>
+#+END_SRC
+
+Above is a common mistake: "no application has connected...". You need to visit localhost:3000 so that Shadow CLJS is connected to the js runtime to evaluate your code.
+* REPL in CLJS
+
+- in a browser setting, generally not as useful
+- rely on browser, hot code reloading, and tooling
+- tooling: inline evaluation results, autocomplete, etc.
+- in a node setting, absolutely useful
+- of course on the jvm its a requirement
+
+* Npm packages
+
+While server is running you can just install
+
+#+BEGIN_SRC sh
+npm i react-modal
+#+END_SRC
+
+#+ATTR_REVEAL: :frag roll-in
+#+BEGIN_SRC clojure
+(ns app.main
+  (:require [reagent.core :as r]
+            ["react-modal" :as Modal]))
+
+(.setAppElement Modal "#app")
+
+(defn app
+  []
+  (let [modal-state (r/atom false)]
+    (fn []
+      [:div {:style {:margin "auto"
+                     :margin-top "100px"
+                     :width "600px"}}
+       [:h1 "hi"]
+       [:button {:on-click #(swap! modal-state not)}
+        "Button"]
+       [:> Modal {:isOpen @modal-state
+                  :onRequestClose #(reset! modal-state false)
+                  :contentLabel "Example Modal"
+                  :shouldCloseOnOverlayClick true
+                  :style {:content {:top         "50%"
+                                    :left        "50%"
+                                    :right       "auto"
+                                    :bottom      "auto"
+                                    :marginRight "-50%"
+                                    :transform   "translate(-50%, -50%)"}}}
+        [:div
+         "This is a modal"
+         [:ul
+          [:li "With content"]
+          [:li "And lists"]]]]])))
+#+END_SRC
+
+* Netlify
+
+Netlify can build!
+- Build Command: `npx shadow-cljs release app`
+
+- Publish directory: "public"
+
+#+ATTR_REVEAL: :frag roll-in
+https://hungry-ride-9a629b.netlify.com/
+
+* The bad
+
+- can use most libs but not all
+- tooling not as polished
+- there's not 100,000k people making cool libraries
+* Links and Info
+
+- Shadow CLJS Users Guide: https://shadow-cljs.github.io/docs/UsersGuide.html
+- Clojurescript homepage: https://clojurescript.org/
+- Clojure for the Brave and True: https://www.braveclojure.com/
+- Slack: http://clojurians.net/
+- Learn Re-frame https://www.learnreframe.com/
+- subreddit /r/Clojure
