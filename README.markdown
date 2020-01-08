@@ -10,4 +10,5 @@ This describes an intro to Shadow CLJS. Includes instructions for building a sim
 
 Links:
 Project: [asg-ignite-app repo](https://github.com/dpsutton/asg-ignite-app)
-Hosted on Netlify: [site](https://hungry-ride-9a629b.netlify.com/)
+Project hosted on Netlify: [site](https://hungry-ride-9a629b.netlify.com/)
+Presentation hosted on Netlify: [presentation](https://suspicious-archimedes-390f0a.netlify.com/)
