@@ -28,12 +28,12 @@
 <body>
 <div class="reveal">
 <div class="slides">
-<section id="sec-title-slide"><h1 class="title">Up and Running with Shadow CLJS</h1><h2 class="author">Dan Sutton</h2><p class="date">Created: 2020-01-08 Wed 08:04</p>
+<section id="sec-title-slide"><h1 class="title">Up and Running with Shadow CLJS</h1><h2 class="author">Dan Sutton</h2><p class="date">Created: 2020-01-08 Wed 08:09</p>
 </section>
 
 <section>
-<section id="slide-org59e5b83">
-<h2 id="org59e5b83"><span class="section-number-2">1</span> Shadow CLJS and ClojureScript</h2>
+<section id="slide-org85d154e">
+<h2 id="org85d154e"><span class="section-number-2">1</span> Shadow CLJS and ClojureScript</h2>
 
 <div class="figure">
 <p><img src="https://raw.githubusercontent.com/thheller/shadow-cljs/master/src/main/shadow/cljs/devtools/server/web/resources/img/shadow-cljs.png" alt="shadow-cljs.png" />
@@ -49,8 +49,8 @@
 </section>
 </section>
 <section>
-<section id="slide-orgf603939">
-<h2 id="orgf603939"><span class="section-number-2">2</span> What this will demonstrate</h2>
+<section id="slide-org2d4c6e8">
+<h2 id="org2d4c6e8"><span class="section-number-2">2</span> What this will demonstrate</h2>
 <ul>
 <li>how to get clojurescript installed</li>
 <li>how to configure</li>
@@ -62,8 +62,8 @@
 </section>
 </section>
 <section>
-<section id="slide-orga8514b2">
-<h2 id="orga8514b2"><span class="section-number-2">3</span> Why ClojureScript</h2>
+<section id="slide-org3f0bffc">
+<h2 id="org3f0bffc"><span class="section-number-2">3</span> Why ClojureScript</h2>
 <ul>
 <li>functional</li>
 <li>interactive/REPL</li>
@@ -76,8 +76,8 @@
 </section>
 </section>
 <section>
-<section id="slide-org6970375">
-<h2 id="org6970375"><span class="section-number-2">4</span> What is Shadow CLJS</h2>
+<section id="slide-org9c4f0e9">
+<h2 id="org9c4f0e9"><span class="section-number-2">4</span> What is Shadow CLJS</h2>
 <ul>
 <li>Clojurescript is a compiler, its just a jar file for a jvm.</li>
 <li>need configuration for CLJS compiler</li>
@@ -90,8 +90,8 @@
 </section>
 </section>
 <section>
-<section id="slide-orga04c119">
-<h2 id="orga04c119"><span class="section-number-2">5</span> Getting Set Up</h2>
+<section id="slide-orgcf9cb31">
+<h2 id="orgcf9cb31"><span class="section-number-2">5</span> Getting Set Up</h2>
 <p>
 The web is built on this language so we need two programs in this language:
 </p>
@@ -113,8 +113,8 @@ Two c++ programs:
 </section>
 </section>
 <section>
-<section id="slide-org8ab1cb3">
-<h2 id="org8ab1cb3"><span class="section-number-2">6</span> Creating an app</h2>
+<section id="slide-org22151a7">
+<h2 id="org22151a7"><span class="section-number-2">6</span> Creating an app</h2>
 <p>
 To target a browser:
 </p>
@@ -146,12 +146,12 @@ This can be a bit heavier. It has some opinionated testing out of the box and in
 </section>
 </section>
 <section>
-<section id="slide-org919ad82">
-<h2 id="org919ad82"><span class="section-number-2">7</span> Create shadow-cljs.edn</h2>
+<section id="slide-org033f074">
+<h2 id="org033f074"><span class="section-number-2">7</span> Create shadow-cljs.edn</h2>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">{</span><span style="color: #d08770;">:builds</span>       <span style="color: #93a8c6;">{</span><span style="color: #d08770;">:app</span> <span style="color: #b0b1a3;">{</span><span style="color: #d08770;">:asset-path</span> <span style="color: #a3be8c;">"/js"</span>
-                      <span style="color: #d08770;">:modules</span>    <span style="color: #97b098;">{</span><span style="color: #d08770;">:main</span> <span style="color: #aebed8;">{</span><span style="color: #d08770;">:init-fn</span> <span style="color: #c0c5ce;">app.main</span>/main<span style="color: #aebed8;">}</span><span style="color: #97b098;">}</span>
+                      <span style="color: #d08770;">:modules</span>    <span style="color: #97b098;">{</span><span style="color: #d08770;">:main</span> <span style="color: #aebed8;">{</span><span style="color: #d08770;">:init-fn</span> <span style="color: #c0c5ce;">app.main</span>/init<span style="color: #aebed8;">}</span><span style="color: #97b098;">}</span>
                       <span style="color: #d08770;">:output-dir</span> <span style="color: #a3be8c;">"public/js"</span>
                       <span style="color: #d08770;">:target</span>     <span style="color: #d08770;">:browser</span><span style="color: #b0b1a3;">}</span><span style="color: #93a8c6;">}</span>
  <span style="color: #d08770;">:dependencies</span> <span style="color: #93a8c6;">[</span><span style="color: #b0b1a3;">[</span>reagent <span style="color: #a3be8c;">"0.8.1"</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>
@@ -163,8 +163,8 @@ This can be a bit heavier. It has some opinionated testing out of the box and in
 </section>
 </section>
 <section>
-<section id="slide-orgceff3f2">
-<h2 id="orgceff3f2"><span class="section-number-2">8</span> Index.html</h2>
+<section id="slide-org491215c">
+<h2 id="org491215c"><span class="section-number-2">8</span> Index.html</h2>
 <div class="org-src-container">
 
 <pre  class="src src-sh"><code trim>tree public
@@ -190,8 +190,8 @@ public
 </section>
 </section>
 <section>
-<section id="slide-org26135e7">
-<h2 id="org26135e7"><span class="section-number-2">9</span> Hiccup</h2>
+<section id="slide-orgbc747ae">
+<h2 id="orgbc747ae"><span class="section-number-2">9</span> Hiccup</h2>
 <p>
 Datastructures describing html
 </p>
@@ -199,7 +199,7 @@ Datastructures describing html
 
 <pre  class="src src-html"><code trim>&lt;<span style="color: #8fa1b3;">div</span>&gt;
   &lt;<span style="color: #8fa1b3;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Title</span>&lt;/<span style="color: #8fa1b3;">h1</span>&gt;
-  &lt;<span style="color: #8fa1b3;">a</span> <span style="color: #bf616a;">href</span>=<span style="color: #a3be8c;">"www.google.com"</span>&gt;Link text&lt;/<span style="color: #8fa1b3;">a</span>&gt;
+  &lt;<span style="color: #8fa1b3;">a</span> <span style="color: #bf616a;">href</span>=<span style="color: #a3be8c;">"https://www.google.com"</span>&gt;Link text&lt;/<span style="color: #8fa1b3;">a</span>&gt;
   &lt;<span style="color: #8fa1b3;">ul</span>&gt;
     &lt;<span style="color: #8fa1b3;">li</span>&gt;Thing 1&lt;/<span style="color: #8fa1b3;">li</span>&gt;
     &lt;<span style="color: #8fa1b3;">li</span>&gt;Thing 2&lt;/<span style="color: #8fa1b3;">li</span>&gt;
@@ -225,8 +225,8 @@ Datastructures describing html
 </section>
 </section>
 <section>
-<section id="slide-orgebbfec5">
-<h2 id="orgebbfec5"><span class="section-number-2">10</span> Closer look</h2>
+<section id="slide-org111a936">
+<h2 id="org111a936"><span class="section-number-2">10</span> Closer look</h2>
 <div class="org-src-container">
 
 <pre  class="src src-sh"><code trim>tree src
@@ -256,8 +256,8 @@ src
 </section>
 </section>
 <section>
-<section id="slide-org7801437">
-<h2 id="org7801437"><span class="section-number-2">11</span> Boiler Plate</h2>
+<section id="slide-org6ff9309">
+<h2 id="org6ff9309"><span class="section-number-2">11</span> Boiler Plate</h2>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:</span><span style="color: #c0c5ce;">dev</span><span style="color: #c0c5ce; background-color: #2b303b;">/</span><span style="color: #d08770;">after-load</span> <span style="color: #8fa1b3;">start</span> <span style="color: #93a8c6;">[]</span>
@@ -268,7 +268,7 @@ src
 
 <div class="org-src-container">
 
-<pre  class="fragment roll-in"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">main</span>
+<pre  class="fragment roll-in"><code trim><span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">init</span>
   <span style="color: #93a8c6;">[]</span>
   <span style="color: #93a8c6;">(</span>start<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </code></pre>
@@ -276,8 +276,8 @@ src
 </section>
 </section>
 <section>
-<section id="slide-org1de0269">
-<h2 id="org1de0269"><span class="section-number-2">12</span> Source files</h2>
+<section id="slide-org0463ae7">
+<h2 id="org0463ae7"><span class="section-number-2">12</span> Source files</h2>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><code trim><span style="color: #c0c5ce;">;; </span><span style="color: #65737e;">src/app/main.cljs</span>
@@ -295,7 +295,7 @@ src
   <span style="color: #93a8c6;">(</span><span style="color: #c0c5ce;">r</span>/render <span style="color: #b0b1a3;">[</span>app<span style="color: #b0b1a3;">]</span>
             <span style="color: #b0b1a3;">(</span>.getElementById <span style="color: #c0c5ce;">js</span>/document <span style="color: #a3be8c;">"app"</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 
-<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">main</span>
+<span style="color: #8c8c8c;">(</span><span style="color: #b48ead;">defn</span> ^<span style="color: #d08770;">:export</span> <span style="color: #8fa1b3;">init</span>
   <span style="color: #93a8c6;">[]</span>
   <span style="color: #93a8c6;">(</span>start<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </code></pre>
@@ -304,8 +304,8 @@ src
 </section>
 </section>
 <section>
-<section id="slide-orgbe63108">
-<h2 id="orgbe63108"><span class="section-number-2">13</span> Run the app</h2>
+<section id="slide-org3327cb6">
+<h2 id="org3327cb6"><span class="section-number-2">13</span> Run the app</h2>
 <div class="org-src-container">
 
 <pre  class="src src-sh"><code trim>dan@pop-os:~/projects/clojure/cljs-play/app$ npx shadow-cljs watch app
@@ -333,8 +333,8 @@ And visit localhost:3000 as configured in shadow-cljs.edn
 </section>
 </section>
 <section>
-<section id="slide-org0ed6f8f">
-<h2 id="org0ed6f8f"><span class="section-number-2">14</span> REPL</h2>
+<section id="slide-org765b20b">
+<h2 id="org765b20b"><span class="section-number-2">14</span> REPL</h2>
 <p>
 How to connect to a repl
 </p>
@@ -366,8 +366,8 @@ Also, note that `(app)` returns just a vector. No React objects. Note that the c
 </section>
 </section>
 <section>
-<section id="slide-orgbdf6da4">
-<h2 id="orgbdf6da4"><span class="section-number-2">15</span> REPL in CLJS</h2>
+<section id="slide-org446fb02">
+<h2 id="org446fb02"><span class="section-number-2">15</span> REPL in CLJS</h2>
 <ul>
 <li>in a browser setting, generally not as useful</li>
 <li>rely on browser, hot code reloading, and tooling</li>
@@ -380,8 +380,8 @@ Also, note that `(app)` returns just a vector. No React objects. Note that the c
 </section>
 </section>
 <section>
-<section id="slide-orgab9f4a1">
-<h2 id="orgab9f4a1"><span class="section-number-2">16</span> Npm packages</h2>
+<section id="slide-org887baab">
+<h2 id="org887baab"><span class="section-number-2">16</span> Npm packages</h2>
 <p>
 While server is running you can just install
 </p>
@@ -431,8 +431,8 @@ While server is running you can just install
 </section>
 </section>
 <section>
-<section id="slide-org2d1c214">
-<h2 id="org2d1c214"><span class="section-number-2">17</span> Netlify</h2>
+<section id="slide-org2a00678">
+<h2 id="org2a00678"><span class="section-number-2">17</span> Netlify</h2>
 <p>
 Netlify can build!
 </p>
@@ -450,8 +450,8 @@ Netlify can build!
 </section>
 </section>
 <section>
-<section id="slide-orgf9a729f">
-<h2 id="orgf9a729f"><span class="section-number-2">18</span> The bad</h2>
+<section id="slide-orgd756874">
+<h2 id="orgd756874"><span class="section-number-2">18</span> The bad</h2>
 <ul>
 <li>can use most libs but not all</li>
 <li>tooling not as polished</li>
@@ -461,8 +461,8 @@ Netlify can build!
 </section>
 </section>
 <section>
-<section id="slide-orgb60d1a6">
-<h2 id="orgb60d1a6"><span class="section-number-2">19</span> Links and Info</h2>
+<section id="slide-org11e9638">
+<h2 id="org11e9638"><span class="section-number-2">19</span> Links and Info</h2>
 <ul>
 <li>Shadow CLJS Users Guide: <a href="https://shadow-cljs.github.io/docs/UsersGuide.html">https://shadow-cljs.github.io/docs/UsersGuide.html</a></li>
 <li>Clojurescript homepage: <a href="https://clojurescript.org/">https://clojurescript.org/</a></li>

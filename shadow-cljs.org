@@ -81,7 +81,7 @@ This can be a bit heavier. It has some opinionated testing out of the box and in
 
 #+BEGIN_SRC clojure #+NAME: shadow-cljs.edn
   {:builds       {:app {:asset-path "/js"
-                        :modules    {:main {:init-fn app.main/main}}
+                        :modules    {:main {:init-fn app.main/init}}
                         :output-dir "public/js"
                         :target     :browser}}
    :dependencies [[reagent "0.8.1"]]
@@ -168,7 +168,7 @@ src
 
 #+ATTR_REVEAL: :frag roll-in
 #+BEGIN_SRC clojure
-(defn ^:export main
+(defn ^:export init
   []
   (start))
 #+END_SRC
@@ -190,7 +190,7 @@ src
   (r/render [app]
             (.getElementById js/document "app")))
 
-(defn ^:export main
+(defn ^:export init
   []
   (start))
 #+END_SRC
