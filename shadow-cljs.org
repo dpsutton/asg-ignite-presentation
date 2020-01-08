@@ -73,6 +73,9 @@ cd my-app
 npm start
 #+END_SRC
 
+#+ATTR_REVEAL: :frag roll-in
+This can be a bit heavier. It has some opinionated testing out of the box and installs a heavy headless browser in node-modules. The former options is usually better for me.
+
 * Create shadow-cljs.edn
 
 #+BEGIN_SRC clojure #+NAME: shadow-cljs.edn
@@ -87,6 +90,11 @@ npm start
 
 * Index.html
 
+#+BEGIN_SRC sh
+tree public
+public
+└── index.html
+#+END_SRC
 #+BEGIN_SRC html
 <!DOCTYPE html>
 <html lang="en">
@@ -129,6 +137,7 @@ Datastructures describing html
 * Closer look
 
 #+BEGIN_SRC sh
+tree src
 src
 └── app
     └── main.cljs
@@ -200,6 +209,11 @@ shadow-cljs - watching build :app
 [:app] Compiling ...
 [:app] Build completed. (162 files, 161 compiled, 0 warnings, 32.62s)
 #+END_SRC
+
+And visit localhost:3000 as configured in shadow-cljs.edn
+#+BEGIN_SRC clojure
+  :dev-http     {3000 "public"}
+#+END_SRC
 * REPL
 How to connect to a repl
 
@@ -219,6 +233,8 @@ app.main=>
 #+END_SRC
 
 Above is a common mistake: "no application has connected...". You need to visit localhost:3000 so that Shadow CLJS is connected to the js runtime to evaluate your code.
+
+Also, note that `(app)` returns just a vector. No React objects. Note that the code in the repo is a bit more advanced so will actually return a function though.
 * REPL in CLJS
 
 - in a browser setting, generally not as useful
